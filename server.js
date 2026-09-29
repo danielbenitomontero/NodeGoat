@@ -13,6 +13,20 @@ const http = require("http");
 const marked = require("marked");
 //const nosniff = require('dont-sniff-mimetype');
 const app = express(); // Web framework to handle routing requests
+// CORRECCIÓN DevSecOps: Protección de cabeceras HTTP con Helmet
+const helmet = require("helmet");
+app.use(helmet({
+    contentSecurityPolicy: false
+}));
+app.disable("x-powered-by");
+
+// CORRECCIÓN DevSecOps: Mitigation DoS y Fuerza Bruta
+const rateLimit = require("express-rate-limit");
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100
+});
+app.use(limiter);
 const routes = require("./app/routes");
 const { port, db, cookieSecret } = require("./config/config"); // Application config properties
 /*
