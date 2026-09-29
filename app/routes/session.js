@@ -51,10 +51,9 @@ function SessionHandler(db) {
     };
 
     this.handleLoginRequest = (req, res, next) => {
-        const {
-            userName,
-            password
-        } = req.body;
+        // CORRECCIÓN DevSecOps: Sanitización estricta contra inyección NoSQL
+        const userName = String((req.body && req.body.userName) || "");
+        const password = String((req.body && req.body.password) || "");
         userDAO.validateLogin(userName, password, (err, user) => {
             const errorMessage = "Invalid username and/or password";
             const invalidUserNameErrorMessage = "Invalid username";
